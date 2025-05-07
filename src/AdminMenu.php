@@ -4,11 +4,10 @@ namespace PromotionEngineBundle;
 
 use Knp\Menu\ItemInterface;
 use PromotionEngineBundle\Entity\Participation;
-use Tourze\EasyAdminMenuBundle\Attribute\MenuProvider;
 use Tourze\EasyAdminMenuBundle\Service\LinkGeneratorInterface;
+use Tourze\EasyAdminMenuBundle\Service\MenuProviderInterface;
 
-#[MenuProvider]
-class AdminMenu
+class AdminMenu implements MenuProviderInterface
 {
     public function __construct(private readonly LinkGeneratorInterface $linkGenerator)
     {
