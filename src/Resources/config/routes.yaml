@@ -1,0 +1,3 @@
+promotion_engine_controllers:
+  resource: '../../Controller/'
+  type: attribute
