@@ -7,11 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\DiscountFreeConditionRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
+use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
+use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
+use Tourze\DoctrineTimestampBundle\Attribute\UpdateTimeColumn;
 use Tourze\EasyAdmin\Attribute\Action\Creatable;
 use Tourze\EasyAdmin\Attribute\Action\Deletable;
 use Tourze\EasyAdmin\Attribute\Action\Editable;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
+use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
 use Tourze\EasyAdmin\Attribute\Column\ListColumn;
+use Tourze\EasyAdmin\Attribute\Filter\Filterable;
 use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
 #[AsPermission(title: '优惠买N得M关系表')]

@@ -2,14 +2,17 @@
 
 namespace PromotionEngineBundle\Entity;
 
-use AppBundle\Entity\BizUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\ParticipationRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
+use Tourze\DoctrineTimestampBundle\Attribute\UpdateTimeColumn;
 use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
 use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
@@ -77,7 +80,7 @@ class Participation
 
     #[ORM\ManyToOne]
     #[ListColumn(title: '参与人')]
-    private ?BizUser $user = null;
+    private ?UserInterface $user = null;
 
     /**
      * @var Collection<int, Campaign>
@@ -131,12 +134,12 @@ class Participation
         return $this->id;
     }
 
-    public function getUser(): ?BizUser
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?BizUser $user): static
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 
