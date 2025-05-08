@@ -4,7 +4,6 @@ namespace PromotionEngineBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use DoctrineEnhanceBundle\Repository\CommonRepositoryAware;
 use PromotionEngineBundle\Entity\DiscountFreeCondition;
 
 /**
@@ -15,7 +14,6 @@ use PromotionEngineBundle\Entity\DiscountFreeCondition;
  */
 class DiscountFreeConditionRepository extends ServiceEntityRepository
 {
-    use CommonRepositoryAware;
 
     public function __construct(ManagerRegistry $registry)
     {
