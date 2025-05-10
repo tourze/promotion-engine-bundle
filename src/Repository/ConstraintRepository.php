@@ -19,17 +19,4 @@ class ConstraintRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Constraint::class);
     }
-
-    public function add(Constraint $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    public function update(bool $flush = true): void
-    {
-        $this->_em->flush();
-    }
 }

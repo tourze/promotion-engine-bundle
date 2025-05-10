@@ -19,17 +19,4 @@ class CampaignRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Campaign::class);
     }
-
-    public function add(Campaign $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    public function update(bool $flush = true): void
-    {
-        $this->_em->flush();
-    }
 }

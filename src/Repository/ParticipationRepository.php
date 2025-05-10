@@ -19,17 +19,4 @@ class ParticipationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Participation::class);
     }
-
-    public function add(Participation $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    public function update(bool $flush = true): void
-    {
-        $this->_em->flush();
-    }
 }

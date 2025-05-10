@@ -19,17 +19,4 @@ class ProductRelationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ProductRelation::class);
     }
-
-    public function add(ProductRelation $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    public function update(bool $flush = true): void
-    {
-        $this->_em->flush();
-    }
 }

@@ -19,17 +19,4 @@ class DiscountConditionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, DiscountCondition::class);
     }
-
-    public function add(DiscountCondition $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
-    }
-
-    public function update(bool $flush = true): void
-    {
-        $this->_em->flush();
-    }
 }
