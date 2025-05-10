@@ -36,5 +36,10 @@
     "psr-4": {
       "PromotionEngineBundle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PromotionEngineBundle\\Tests\\": "tests"
+    }
   }
 }
