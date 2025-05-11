@@ -13,6 +13,7 @@
     "knplabs/knp-menu": "^3.7",
     "symfony/config": "^6.4",
     "symfony/dependency-injection": "^6.4",
+    "symfony/doctrine-bridge": "^6.4",
     "symfony/http-kernel": "^6.4",
     "symfony/security-core": "^6.4",
     "symfony/security-http": "^6.4",
