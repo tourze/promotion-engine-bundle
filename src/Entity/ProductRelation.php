@@ -8,26 +8,14 @@ use PromotionEngineBundle\Repository\ProductRelationRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Action\Creatable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Action\Editable;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Field\FormField;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '享受折扣')]
 #[Listable]
-#[Creatable]
-#[Editable]
-#[Deletable]
 #[ORM\Entity(repositoryClass: ProductRelationRepository::class)]
 #[ORM\Table(name: 'ims_promotion_discount_product_relation')]
 class ProductRelation implements AdminArrayInterface
 {
-    #[ListColumn(order: -1)]
-    #[ExportColumn]
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
@@ -44,13 +32,9 @@ class ProductRelation implements AdminArrayInterface
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Discount $discount = null;
 
-    #[ListColumn]
-    #[FormField(span: 6)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'spuId'])]
     private string $spuId;
 
-    #[ListColumn]
-    #[FormField(span: 6)]
     #[ORM\Column(type: Types::BIGINT, nullable: true, options: ['comment' => 'skuId'])]
     private ?string $skuId = null;
 
@@ -119,4 +103,9 @@ class ProductRelation implements AdminArrayInterface
     {
         $this->giftQuantity = $giftQuantity;
     }
+    public function __toString(): string
+    {
+        return (string) ($this->getId() ?? '');
+    }
+
 }

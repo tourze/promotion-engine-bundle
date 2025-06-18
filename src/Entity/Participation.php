@@ -8,23 +8,16 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\ParticipationRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
 use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Filter\Filterable;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '参与记录')]
 #[Listable]
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
 #[ORM\Table(name: 'ims_promotion_participation')]
-class Participation
-{
+class Participation implements \Stringable {
     use TimestampableAware;
 
     #[CreatedByColumn]
@@ -35,8 +28,6 @@ class Participation
     #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
     private ?string $updatedBy = null;
 
-    #[ExportColumn]
-    #[ListColumn(order: -1, sorter: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
@@ -44,24 +35,19 @@ class Participation
     private ?string $id = null;
 
     #[ORM\ManyToOne]
-    #[ListColumn(title: '参与人')]
+
     private ?UserInterface $user = null;
 
     /**
      * @var Collection<int, Campaign>
      */
-    #[ListColumn(title: '活动名称')]
-    #[Filterable(label: '活动')]
+
     #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'participations')]
     private Collection $campaigns;
 
-    #[ListColumn]
-    #[Groups(['admin_curd'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true, options: ['comment' => '总价'])]
     private ?string $totalPrice = null;
 
-    #[ListColumn]
-    #[Groups(['admin_curd'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true, options: ['comment' => '优惠扣减'])]
     private ?string $discountPrice = null;
 
@@ -154,4 +140,9 @@ class Participation
     {
         $this->discountPrice = $discountPrice;
     }
+    public function __toString(): string
+    {
+        return (string) ($this->getId() ?? '');
+    }
+
 }

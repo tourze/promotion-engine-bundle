@@ -8,25 +8,14 @@ use PromotionEngineBundle\Repository\DiscountConditionRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Action\Creatable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Action\Editable;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '优惠条件表')]
 #[Listable]
-#[Creatable]
-#[Editable]
-#[Deletable]
 #[ORM\Entity(repositoryClass: DiscountConditionRepository::class)]
 #[ORM\Table(name: 'ims_promotion_discount_condition')]
 class DiscountCondition implements AdminArrayInterface
 {
-    #[ListColumn(order: -1)]
-    #[ExportColumn]
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
@@ -43,7 +32,6 @@ class DiscountCondition implements AdminArrayInterface
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Discount $discount = null;
 
-    #[ListColumn]
     #[ORM\Column(type: Types::STRING, nullable: false, options: ['comment' => '条件1'])]
     private string $condition1;
 
@@ -103,4 +91,9 @@ class DiscountCondition implements AdminArrayInterface
     {
         $this->condition3 = $condition3;
     }
+    public function __toString(): string
+    {
+        return (string) ($this->getId() ?? '');
+    }
+
 }

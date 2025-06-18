@@ -16,21 +16,9 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
 use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
-use Tourze\EasyAdmin\Attribute\Action\Creatable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Action\Editable;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
-use Tourze\EasyAdmin\Attribute\Column\BoolColumn;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Field\FormField;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '享受折扣')]
 #[Listable]
-#[Creatable]
-#[Editable]
-#[Deletable]
 #[ORM\Entity(repositoryClass: DiscountRepository::class)]
 #[ORM\Table(name: 'ims_promotion_discount')]
 class Discount implements AdminArrayInterface, \Stringable
@@ -45,20 +33,16 @@ class Discount implements AdminArrayInterface, \Stringable
     #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
     private ?string $updatedBy = null;
 
-    #[ExportColumn]
-    #[ListColumn(order: -1, sorter: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
     private ?string $id = null;
 
-    #[BoolColumn]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-    #[ListColumn(order: 97)]
-    #[FormField(order: 97)]
+
     private ?bool $valid = false;
 
     #[Ignore]
@@ -75,26 +59,19 @@ class Discount implements AdminArrayInterface, \Stringable
     #[ORM\Column(type: Types::INTEGER, nullable: true, options: ['default' => 0, 'comment' => '参与数量'])]
     private ?int $number = 0;
 
-    #[ListColumn]
-    #[FormField(span: 6)]
     #[ORM\Column(length: 50, enumType: DiscountType::class, options: ['comment' => '活动优惠'])]
     private DiscountType $type;
 
-    #[ListColumn]
-    #[FormField(span: 6)]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true, options: ['comment' => '数值'])]
     private ?string $value = null;
 
-    #[ListColumn]
-    #[FormField(span: 12)]
     #[ORM\Column(length: 200, nullable: true, options: ['comment' => '备注'])]
     private ?string $remark = null;
 
     /**
      * @var Collection<int, Discount>
      */
-    #[ListColumn(title: '享受折扣')]
-    #[FormField(title: '享受折扣')]
+
     #[ORM\OneToMany(mappedBy: 'discount', targetEntity: ProductRelation::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $productRelations;
 

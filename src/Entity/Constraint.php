@@ -15,21 +15,9 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
 use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
-use Tourze\EasyAdmin\Attribute\Action\Creatable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Action\Editable;
 use Tourze\EasyAdmin\Attribute\Action\Listable;
-use Tourze\EasyAdmin\Attribute\Column\BoolColumn;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Field\FormField;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '参与限制')]
 #[Listable]
-#[Creatable]
-#[Editable]
-#[Deletable]
 #[ORM\Entity(repositoryClass: ConstraintRepository::class)]
 #[ORM\Table(name: 'ims_promotion_limit')]
 class Constraint implements \Stringable, AdminArrayInterface
@@ -44,20 +32,16 @@ class Constraint implements \Stringable, AdminArrayInterface
     #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
     private ?string $updatedBy = null;
 
-    #[ExportColumn]
-    #[ListColumn(order: -1, sorter: true)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
     private ?string $id = null;
 
-    #[BoolColumn]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-    #[ListColumn(order: 97)]
-    #[FormField(order: 97)]
+
     private ?bool $valid = false;
 
     #[Ignore]
@@ -65,18 +49,12 @@ class Constraint implements \Stringable, AdminArrayInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Campaign $campaign = null;
 
-    #[ListColumn]
-    #[FormField(span: 24)]
     #[ORM\Column(length: 30, enumType: CompareType::class, options: ['comment' => '对比类型'])]
     private CompareType $compareType;
 
-    #[ListColumn]
-    #[FormField(span: 24)]
     #[ORM\Column(length: 100, enumType: LimitType::class, options: ['comment' => '限制类型'])]
     private LimitType $limitType;
 
-    #[ListColumn]
-    #[FormField(span: 12)]
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '范围值'])]
     private ?string $rangeValue = null;
 

@@ -236,7 +236,6 @@ class DiscountTest extends TestCase
         $discount->setValue($value);
         
         $adminArray = $discount->retrieveAdminArray();
-        $this->assertIsArray($adminArray);
         $this->assertArrayHasKey('type', $adminArray);
         $this->assertEquals($type->value, $adminArray['type']);
         $this->assertArrayHasKey('value', $adminArray);

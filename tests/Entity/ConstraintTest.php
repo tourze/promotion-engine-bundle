@@ -158,7 +158,6 @@ class ConstraintTest extends TestCase
         $constraint->setLimitType($limitType);
         
         $adminArray = $constraint->retrieveAdminArray();
-        $this->assertIsArray($adminArray);
         $this->assertArrayHasKey('compareType', $adminArray);
         $this->assertEquals($compareType->value, $adminArray['compareType']);
         $this->assertArrayHasKey('limitType', $adminArray);

@@ -273,7 +273,6 @@ class CampaignTest extends TestCase
         $campaign->setEndTime(new DateTime('2023-11-12'));
         
         $adminArray = $campaign->retrieveAdminArray();
-        $this->assertIsArray($adminArray);
         $this->assertArrayHasKey('title', $adminArray);
         $this->assertEquals($title, $adminArray['title']);
     }
