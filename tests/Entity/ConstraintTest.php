@@ -2,7 +2,6 @@
 
 namespace PromotionEngineBundle\Tests\Entity;
 
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use PromotionEngineBundle\Entity\Campaign;
 use PromotionEngineBundle\Entity\Constraint;
@@ -119,12 +118,12 @@ class ConstraintTest extends TestCase
     public function testTimestampMethods(): void
     {
         $constraint = new Constraint();
-        $now = new DateTime();
+        $now = new \DateTimeImmutable();
         
         $constraint->setCreateTime($now);
         $this->assertEquals($now, $constraint->getCreateTime());
         
-        $updateTime = new DateTime();
+        $updateTime = new \DateTimeImmutable();
         $constraint->setUpdateTime($updateTime);
         $this->assertEquals($updateTime, $constraint->getUpdateTime());
     }

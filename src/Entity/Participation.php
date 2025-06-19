@@ -8,25 +8,16 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\ParticipationRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
-use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
-use Tourze\EasyAdmin\Attribute\Action\Listable;
+use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
-#[Listable]
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
-#[ORM\Table(name: 'ims_promotion_participation')]
-class Participation implements \Stringable {
+#[ORM\Table(name: 'ims_promotion_participation', options: ['comment' => '促销参与记录'])]
+class Participation implements \Stringable, AdminArrayInterface {
     use TimestampableAware;
-
-    #[CreatedByColumn]
-    #[ORM\Column(nullable: true, options: ['comment' => '创建人'])]
-    private ?string $createdBy = null;
-
-    #[UpdatedByColumn]
-    #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
-    private ?string $updatedBy = null;
+    use BlameableAware;
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -54,30 +45,6 @@ class Participation implements \Stringable {
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
-    }
-
-    public function setCreatedBy(?string $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    public function setUpdatedBy(?string $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
     }
 
     public function getId(): ?string
@@ -143,6 +110,19 @@ class Participation implements \Stringable {
     public function __toString(): string
     {
         return (string) ($this->getId() ?? '');
+    }
+
+    public function retrieveAdminArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'createTime' => $this->getCreateTime()?->format('Y-m-d H:i:s'),
+            'updateTime' => $this->getUpdateTime()?->format('Y-m-d H:i:s'),
+            'user' => $this->getUser()?->getUserIdentifier(),
+            'totalPrice' => $this->getTotalPrice(),
+            'discountPrice' => $this->getDiscountPrice(),
+            'campaigns' => $this->getCampaigns()->map(fn($campaign) => $campaign->getId())->toArray(),
+        ];
     }
 
 }

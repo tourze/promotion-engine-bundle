@@ -14,24 +14,14 @@ use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
-use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
-use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
-use Tourze\EasyAdmin\Attribute\Action\Listable;
+use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
-#[Listable]
 #[ORM\Entity(repositoryClass: DiscountRepository::class)]
-#[ORM\Table(name: 'ims_promotion_discount')]
+#[ORM\Table(name: 'ims_promotion_discount', options: ['comment' => '促销优惠'])]
 class Discount implements AdminArrayInterface, \Stringable
 {
     use TimestampableAware;
-
-    #[CreatedByColumn]
-    #[ORM\Column(nullable: true, options: ['comment' => '创建人'])]
-    private ?string $createdBy = null;
-
-    #[UpdatedByColumn]
-    #[ORM\Column(nullable: true, options: ['comment' => '更新人'])]
-    private ?string $updatedBy = null;
+    use BlameableAware;
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -69,7 +59,7 @@ class Discount implements AdminArrayInterface, \Stringable
     private ?string $remark = null;
 
     /**
-     * @var Collection<int, Discount>
+     * @var Collection<int, ProductRelation>
      */
 
     #[ORM\OneToMany(mappedBy: 'discount', targetEntity: ProductRelation::class, cascade: ['persist'], orphanRemoval: true)]
@@ -82,35 +72,11 @@ class Discount implements AdminArrayInterface, \Stringable
 
     public function __toString(): string
     {
-        if (!$this->getId()) {
+        if ($this->getId() === null) {
             return '';
         }
 
         return "{$this->getType()->getLabel()} {$this->getValue()}";
-    }
-
-    public function setCreatedBy(?string $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    public function setUpdatedBy(?string $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
     }
 
     public function getId(): ?string

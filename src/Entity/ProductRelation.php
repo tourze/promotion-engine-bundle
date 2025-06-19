@@ -8,11 +8,9 @@ use PromotionEngineBundle\Repository\ProductRelationRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Action\Listable;
 
-#[Listable]
 #[ORM\Entity(repositoryClass: ProductRelationRepository::class)]
-#[ORM\Table(name: 'ims_promotion_discount_product_relation')]
+#[ORM\Table(name: 'ims_promotion_discount_product_relation', options: ['comment' => '促销优惠产品关系'])]
 class ProductRelation implements AdminArrayInterface
 {
 

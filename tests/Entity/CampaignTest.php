@@ -233,12 +233,12 @@ class CampaignTest extends TestCase
     public function testTimestampMethods(): void
     {
         $campaign = new Campaign();
-        $now = new DateTime();
+        $now = new \DateTimeImmutable();
         
         $campaign->setCreateTime($now);
         $this->assertEquals($now, $campaign->getCreateTime());
         
-        $updateTime = new DateTime();
+        $updateTime = new \DateTimeImmutable();
         $campaign->setUpdateTime($updateTime);
         $this->assertEquals($updateTime, $campaign->getUpdateTime());
     }

@@ -8,11 +8,9 @@ use PromotionEngineBundle\Repository\DiscountFreeConditionRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Action\Listable;
 
-#[Listable]
 #[ORM\Entity(repositoryClass: DiscountFreeConditionRepository::class)]
-#[ORM\Table(name: 'ims_promotion_discount_free_condition')]
+#[ORM\Table(name: 'ims_promotion_discount_free_condition', options: ['comment' => '赠品条件'])]
 class DiscountFreeCondition implements AdminArrayInterface
 {
 

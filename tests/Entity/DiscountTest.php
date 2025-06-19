@@ -2,7 +2,6 @@
 
 namespace PromotionEngineBundle\Tests\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use PromotionEngineBundle\Entity\Campaign;
@@ -139,12 +138,12 @@ class DiscountTest extends TestCase
     public function testTimestampMethods(): void
     {
         $discount = new Discount();
-        $now = new DateTime();
+        $now = new \DateTimeImmutable();
         
         $discount->setCreateTime($now);
         $this->assertEquals($now, $discount->getCreateTime());
         
-        $updateTime = new DateTime();
+        $updateTime = new \DateTimeImmutable();
         $discount->setUpdateTime($updateTime);
         $this->assertEquals($updateTime, $discount->getUpdateTime());
     }

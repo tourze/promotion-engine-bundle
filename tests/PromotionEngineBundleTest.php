@@ -25,7 +25,6 @@ class PromotionEngineBundleTest extends TestCase
     {
         $dependencies = PromotionEngineBundle::getBundleDependencies();
         
-        $this->assertIsArray($dependencies);
         $this->assertArrayHasKey(DoctrineSnowflakeBundle::class, $dependencies);
         $this->assertEquals(['all' => true], $dependencies[DoctrineSnowflakeBundle::class]);
     }

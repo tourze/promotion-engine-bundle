@@ -2,7 +2,6 @@
 
 namespace PromotionEngineBundle\Tests\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use PromotionEngineBundle\Entity\Campaign;
@@ -115,12 +114,12 @@ class ParticipationTest extends TestCase
     public function testTimestampMethods(): void
     {
         $participation = new Participation();
-        $now = new DateTime();
+        $now = new \DateTimeImmutable();
         
         $participation->setCreateTime($now);
         $this->assertEquals($now, $participation->getCreateTime());
         
-        $updateTime = new DateTime();
+        $updateTime = new \DateTimeImmutable();
         $participation->setUpdateTime($updateTime);
         $this->assertEquals($updateTime, $participation->getUpdateTime());
     }
