@@ -9,21 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\ParticipationRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\Arrayable\AdminArrayInterface;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
 #[ORM\Table(name: 'ims_promotion_participation', options: ['comment' => '促销参与记录'])]
 class Participation implements \Stringable, AdminArrayInterface {
+    use SnowflakeKeyAware;
     use TimestampableAware;
     use BlameableAware;
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
 
     #[ORM\ManyToOne]
 
@@ -47,10 +42,6 @@ class Participation implements \Stringable, AdminArrayInterface {
         $this->campaigns = new ArrayCollection();
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
 
     public function getUser(): ?UserInterface
     {

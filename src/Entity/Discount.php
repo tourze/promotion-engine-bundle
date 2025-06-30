@@ -11,7 +11,7 @@ use PromotionEngineBundle\Repository\DiscountRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
@@ -20,14 +20,9 @@ use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 #[ORM\Table(name: 'ims_promotion_discount', options: ['comment' => '促销优惠'])]
 class Discount implements AdminArrayInterface, \Stringable
 {
+    use SnowflakeKeyAware;
     use TimestampableAware;
     use BlameableAware;
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
 
     #[IndexColumn]
     #[TrackColumn]
@@ -79,10 +74,6 @@ class Discount implements AdminArrayInterface, \Stringable
         return "{$this->getType()->getLabel()} {$this->getValue()}";
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
 
     public function isValid(): ?bool
     {

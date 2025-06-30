@@ -10,7 +10,7 @@ use PromotionEngineBundle\Repository\ConstraintRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
@@ -19,14 +19,9 @@ use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 #[ORM\Table(name: 'ims_promotion_limit', options: ['comment' => '促销约束条件'])]
 class Constraint implements \Stringable, AdminArrayInterface
 {
+    use SnowflakeKeyAware;
     use TimestampableAware;
     use BlameableAware;
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
 
     #[IndexColumn]
     #[TrackColumn]
@@ -57,10 +52,6 @@ class Constraint implements \Stringable, AdminArrayInterface
         return "{$this->getLimitType()->getLabel()} {$this->getCompareType()->getLabel()} {$this->getRangeValue()}";
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
 
     public function isValid(): ?bool
     {
