@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Enum\DiscountType;
 use PromotionEngineBundle\Repository\DiscountRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
@@ -16,6 +17,9 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
+/**
+ * @implements AdminArrayInterface<string, mixed>
+ */
 #[ORM\Entity(repositoryClass: DiscountRepository::class)]
 #[ORM\Table(name: 'ims_promotion_discount', options: ['comment' => '促销优惠'])]
 class Discount implements AdminArrayInterface, \Stringable
@@ -24,10 +28,10 @@ class Discount implements AdminArrayInterface, \Stringable
     use TimestampableAware;
     use BlameableAware;
 
+    #[Assert\Type(type: 'bool')]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-
     private ?bool $valid = false;
 
     #[Ignore]
@@ -35,28 +39,33 @@ class Discount implements AdminArrayInterface, \Stringable
     #[ORM\JoinColumn(nullable: false)]
     private ?Campaign $campaign = null;
 
+    #[Assert\Type(type: 'bool')]
     #[ORM\Column(type: Types::TEXT, nullable: false, options: ['default' => 0, 'comment' => '是否限量'])]
     private bool $isLimited = false;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(type: Types::INTEGER, nullable: true, options: ['default' => 0, 'comment' => '配额数'])]
     private int $quota = 0;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(type: Types::INTEGER, nullable: true, options: ['default' => 0, 'comment' => '参与数量'])]
     private ?int $number = 0;
 
+    #[Assert\Choice(callback: [DiscountType::class, 'cases'])]
     #[ORM\Column(length: 50, enumType: DiscountType::class, options: ['comment' => '活动优惠'])]
     private DiscountType $type;
 
+    #[Assert\Length(max: 13)]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true, options: ['comment' => '数值'])]
     private ?string $value = null;
 
+    #[Assert\Length(max: 200)]
     #[ORM\Column(length: 200, nullable: true, options: ['comment' => '备注'])]
     private ?string $remark = null;
 
     /**
      * @var Collection<int, ProductRelation>
      */
-
     #[ORM\OneToMany(mappedBy: 'discount', targetEntity: ProductRelation::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $productRelations;
 
@@ -67,24 +76,21 @@ class Discount implements AdminArrayInterface, \Stringable
 
     public function __toString(): string
     {
-        if ($this->getId() === null) {
+        if (null === $this->getId()) {
             return '';
         }
 
         return "{$this->getType()->getLabel()} {$this->getValue()}";
     }
 
-
     public function isValid(): ?bool
     {
         return $this->valid;
     }
 
-    public function setValid(?bool $valid): self
+    public function setValid(?bool $valid): void
     {
         $this->valid = $valid;
-
-        return $this;
     }
 
     public function getCampaign(): ?Campaign
@@ -92,11 +98,9 @@ class Discount implements AdminArrayInterface, \Stringable
         return $this->campaign;
     }
 
-    public function setCampaign(?Campaign $campaign): static
+    public function setCampaign(?Campaign $campaign): void
     {
         $this->campaign = $campaign;
-
-        return $this;
     }
 
     public function getType(): DiscountType
@@ -104,11 +108,9 @@ class Discount implements AdminArrayInterface, \Stringable
         return $this->type;
     }
 
-    public function setType(DiscountType $type): static
+    public function setType(DiscountType $type): void
     {
         $this->type = $type;
-
-        return $this;
     }
 
     public function getValue(): ?string
@@ -116,11 +118,9 @@ class Discount implements AdminArrayInterface, \Stringable
         return $this->value;
     }
 
-    public function setValue(?string $value): static
+    public function setValue(?string $value): void
     {
         $this->value = $value;
-
-        return $this;
     }
 
     public function getRemark(): ?string
@@ -128,11 +128,9 @@ class Discount implements AdminArrayInterface, \Stringable
         return $this->remark;
     }
 
-    public function setRemark(?string $remark): static
+    public function setRemark(?string $remark): void
     {
         $this->remark = $remark;
-
-        return $this;
     }
 
     /**
@@ -143,17 +141,15 @@ class Discount implements AdminArrayInterface, \Stringable
         return $this->productRelations;
     }
 
-    public function addProductRelation(ProductRelation $productRelation): static
+    public function addProductRelation(ProductRelation $productRelation): void
     {
         if (!$this->productRelations->contains($productRelation)) {
             $this->productRelations->add($productRelation);
             $productRelation->setDiscount($this);
         }
-
-        return $this;
     }
 
-    public function removeProductRelation(ProductRelation $productRelation): static
+    public function removeProductRelation(ProductRelation $productRelation): void
     {
         if ($this->productRelations->removeElement($productRelation)) {
             // set the owning side to null (unless already changed)
@@ -161,10 +157,11 @@ class Discount implements AdminArrayInterface, \Stringable
                 $productRelation->setDiscount(null);
             }
         }
-
-        return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function retrieveAdminArray(): array
     {
         return [

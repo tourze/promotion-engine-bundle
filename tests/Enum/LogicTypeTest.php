@@ -2,12 +2,17 @@
 
 namespace PromotionEngineBundle\Tests\Enum;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PromotionEngineBundle\Enum\LogicType;
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\Selectable;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class LogicTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(LogicType::class)]
+final class LogicTypeTest extends AbstractEnumTestCase
 {
     /**
      * 测试枚举值的完整性
@@ -59,8 +64,22 @@ class LogicTypeTest extends TestCase
     {
         $type = LogicType::tryFrom('and');
         $this->assertSame(LogicType::LOGIC_AND, $type);
-        
+
         $type = LogicType::tryFrom('invalid_value');
         $this->assertNull($type);
     }
-} 
+
+    /**
+     * 测试 toArray 方法 (来自 ItemTrait)
+     */
+    public function testToArray(): void
+    {
+        $case = LogicType::LOGIC_AND;
+        $result = $case->toArray();
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('value', $result);
+        $this->assertArrayHasKey('label', $result);
+        $this->assertSame('and', $result['value']);
+        $this->assertSame('逻辑与', $result['label']);
+    }
+}

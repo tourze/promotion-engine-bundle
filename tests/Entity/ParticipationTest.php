@@ -3,20 +3,33 @@
 namespace PromotionEngineBundle\Tests\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PromotionEngineBundle\Entity\Campaign;
 use PromotionEngineBundle\Entity\Participation;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 
-class ParticipationTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(Participation::class)]
+final class ParticipationTest extends AbstractEntityTestCase
 {
+    /**
+     * 创建被测实体的实例
+     */
+    protected function createEntity(): object
+    {
+        return new Participation();
+    }
+
     /**
      * 测试默认构造函数
      */
-    public function testConstruct_default(): void
+    public function testConstructDefault(): void
     {
         $participation = new Participation();
-        
+
         $this->assertInstanceOf(ArrayCollection::class, $participation->getCampaigns());
         $this->assertCount(0, $participation->getCampaigns());
     }
@@ -28,10 +41,10 @@ class ParticipationTest extends TestCase
     {
         $participation = new Participation();
         $user = $this->createMock(UserInterface::class);
-        
-        $this->assertInstanceOf(Participation::class, $participation->setUser($user));
+
+        $participation->setUser($user);
         $this->assertSame($user, $participation->getUser());
-        
+
         // 测试空用户
         $participation->setUser(null);
         $this->assertNull($participation->getUser());
@@ -44,10 +57,10 @@ class ParticipationTest extends TestCase
     {
         $participation = new Participation();
         $totalPrice = '100.00';
-        
+
         $participation->setTotalPrice($totalPrice);
         $this->assertEquals($totalPrice, $participation->getTotalPrice());
-        
+
         // 测试空值
         $participation->setTotalPrice(null);
         $this->assertNull($participation->getTotalPrice());
@@ -60,10 +73,10 @@ class ParticipationTest extends TestCase
     {
         $participation = new Participation();
         $discountPrice = '20.00';
-        
+
         $participation->setDiscountPrice($discountPrice);
         $this->assertEquals($discountPrice, $participation->getDiscountPrice());
-        
+
         // 测试空值
         $participation->setDiscountPrice(null);
         $this->assertNull($participation->getDiscountPrice());
@@ -75,19 +88,19 @@ class ParticipationTest extends TestCase
     public function testCampaignsCollection(): void
     {
         $participation = new Participation();
-        $campaign = $this->createMock(Campaign::class);
-        
+        $campaign = new Campaign();
+
         // 测试添加活动
-        $this->assertInstanceOf(Participation::class, $participation->addCampaign($campaign));
+        $participation->addCampaign($campaign);
         $this->assertTrue($participation->getCampaigns()->contains($campaign));
         $this->assertCount(1, $participation->getCampaigns());
-        
+
         // 测试重复添加同一个活动
         $participation->addCampaign($campaign);
         $this->assertCount(1, $participation->getCampaigns());
-        
+
         // 测试移除活动
-        $this->assertInstanceOf(Participation::class, $participation->removeCampaign($campaign));
+        $participation->removeCampaign($campaign);
         $this->assertFalse($participation->getCampaigns()->contains($campaign));
         $this->assertCount(0, $participation->getCampaigns());
     }
@@ -98,13 +111,13 @@ class ParticipationTest extends TestCase
     public function testGetId(): void
     {
         $participation = new Participation();
-        
+
         // 使用反射设置 ID，因为 ID 是生成的
         $reflection = new \ReflectionClass($participation);
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($participation, '123456789');
-        
+
         $this->assertEquals('123456789', $participation->getId());
     }
 
@@ -115,10 +128,10 @@ class ParticipationTest extends TestCase
     {
         $participation = new Participation();
         $now = new \DateTimeImmutable();
-        
+
         $participation->setCreateTime($now);
         $this->assertEquals($now, $participation->getCreateTime());
-        
+
         $updateTime = new \DateTimeImmutable();
         $participation->setUpdateTime($updateTime);
         $this->assertEquals($updateTime, $participation->getUpdateTime());
@@ -132,11 +145,22 @@ class ParticipationTest extends TestCase
         $participation = new Participation();
         $creator = 'admin';
         $updater = 'manager';
-        
-        $this->assertInstanceOf(Participation::class, $participation->setCreatedBy($creator));
+
+        $participation->setCreatedBy($creator);
         $this->assertEquals($creator, $participation->getCreatedBy());
-        
-        $this->assertInstanceOf(Participation::class, $participation->setUpdatedBy($updater));
+
+        $participation->setUpdatedBy($updater);
         $this->assertEquals($updater, $participation->getUpdatedBy());
     }
-} 
+
+    /**
+     * 提供属性及其样本值的 Data Provider
+     *
+     * @return \Generator<string, array{string, mixed}>
+     */
+    public static function propertiesProvider(): \Generator
+    {
+        yield 'totalPrice' => ['totalPrice', '100.00'];
+        yield 'discountPrice' => ['discountPrice', '20.00'];
+    }
+}

@@ -2,12 +2,17 @@
 
 namespace PromotionEngineBundle\Tests\Enum;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PromotionEngineBundle\Enum\DiscountType;
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\Selectable;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class DiscountTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(DiscountType::class)]
+final class DiscountTypeTest extends AbstractEnumTestCase
 {
     /**
      * 测试枚举值的完整性
@@ -53,7 +58,7 @@ class DiscountTypeTest extends TestCase
     {
         $type = DiscountType::from('reduction');
         $this->assertSame(DiscountType::REDUCTION, $type);
-        
+
         $type = DiscountType::from('discount');
         $this->assertSame(DiscountType::DISCOUNT, $type);
     }
@@ -74,8 +79,27 @@ class DiscountTypeTest extends TestCase
     {
         $type = DiscountType::tryFrom('reduction');
         $this->assertSame(DiscountType::REDUCTION, $type);
-        
+
         $type = DiscountType::tryFrom('invalid_value');
         $this->assertNull($type);
     }
-} 
+
+    /**
+     * 测试 toArray 方法 (来自 ItemTrait)
+     */
+    public function testToArray(): void
+    {
+        $case = DiscountType::REDUCTION;
+        $result = $case->toArray();
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('value', $result);
+        $this->assertArrayHasKey('label', $result);
+        $this->assertSame('reduction', $result['value']);
+        $this->assertSame('整单减价', $result['label']);
+
+        $case = DiscountType::DISCOUNT;
+        $result = $case->toArray();
+        $this->assertSame('discount', $result['value']);
+        $this->assertSame('整单打折', $result['label']);
+    }
+}

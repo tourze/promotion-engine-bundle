@@ -1,20 +1,26 @@
 services:
-  # default configuration for services in *this* file
   _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    autowire: true
+    autoconfigure: true
 
-  PromotionEngineBundle\AdminMenu: ~
-
-  # 如果确认要使用自动扫描、自动注册，建议尽可能将要扫描的目录路径收缩，不要设置那么大的范围
-  PromotionEngineBundle\:
-    resource: '../../'
-    exclude:
-      - '../../DependencyInjection/'
-      - '../../Enum/'
-      - '../../Entity/'
-      - '../../Message/'
-      - '../../Model/'
-      - '../../Exception/'
-      - '../../Resources/'
-      - '../../Tests/'
+  # 自动配置所有服务，但排除 Bundle 类和 Entity 类
+  PromotionEngineBundle\Command\:
+    resource: '../../Command/'
+  
+  PromotionEngineBundle\Controller\:
+    resource: '../../Controller/'
+  
+  PromotionEngineBundle\Enum\:
+    resource: '../../Enum/'
+  
+  PromotionEngineBundle\Repository\:
+    resource: '../../Repository/'
+  
+  PromotionEngineBundle\Service\:
+    resource: '../../Service/'
+  
+  PromotionEngineBundle\DTO\:
+    resource: '../../DTO/'
+  
+  PromotionEngineBundle\Procedure\:
+    resource: '../../Procedure/'

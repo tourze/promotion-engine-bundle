@@ -6,24 +6,28 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\ProductRelationRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 
+/**
+ * @implements AdminArrayInterface<string, mixed>
+ */
 #[ORM\Entity(repositoryClass: ProductRelationRepository::class)]
 #[ORM\Table(name: 'ims_promotion_discount_product_relation', options: ['comment' => '促销优惠产品关系'])]
 class ProductRelation implements AdminArrayInterface
 {
+    use TimestampableAware;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
-    private ?int $id = 0;
+    private int $id = 0;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
-    use TimestampableAware;
 
     #[Ignore]
     #[ORM\ManyToOne(inversedBy: 'productRelations')]
@@ -31,17 +35,27 @@ class ProductRelation implements AdminArrayInterface
     private ?Discount $discount = null;
 
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'spuId'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 20)]
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'SPU ID必须是数字')]
     private string $spuId;
 
     #[ORM\Column(type: Types::BIGINT, nullable: true, options: ['comment' => 'skuId'])]
+    #[Assert\Length(max: 20)]
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'SKU ID必须是数字')]
     private ?string $skuId = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true, options: ['comment' => '总库存', 'default' => 0])]
+    #[Assert\PositiveOrZero]
     private int $total = 0;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true, options: ['comment' => '赠送数量', 'default' => 1])]
+    #[Assert\Positive]
     private int $giftQuantity = 1;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function retrieveAdminArray(): array
     {
         return [
@@ -101,9 +115,9 @@ class ProductRelation implements AdminArrayInterface
     {
         $this->giftQuantity = $giftQuantity;
     }
+
     public function __toString(): string
     {
-        return (string) ($this->getId() ?? '');
+        return (string) $this->getId();
     }
-
 }

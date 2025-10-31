@@ -2,12 +2,17 @@
 
 namespace PromotionEngineBundle\Tests\Enum;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PromotionEngineBundle\Enum\LimitType;
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\Selectable;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class LimitTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(LimitType::class)]
+final class LimitTypeTest extends AbstractEnumTestCase
 {
     /**
      * 测试枚举值的完整性
@@ -55,7 +60,7 @@ class LimitTypeTest extends TestCase
     {
         $type = LimitType::from('order-price');
         $this->assertSame(LimitType::ORDER_PRICE, $type);
-        
+
         $type = LimitType::from('sku-id');
         $this->assertSame(LimitType::SKU_ID, $type);
     }
@@ -76,8 +81,27 @@ class LimitTypeTest extends TestCase
     {
         $type = LimitType::tryFrom('order-price');
         $this->assertSame(LimitType::ORDER_PRICE, $type);
-        
+
         $type = LimitType::tryFrom('invalid_value');
         $this->assertNull($type);
     }
-} 
+
+    /**
+     * 测试 toArray 方法 (来自 ItemTrait)
+     */
+    public function testToArray(): void
+    {
+        $case = LimitType::ORDER_PRICE;
+        $result = $case->toArray();
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('value', $result);
+        $this->assertArrayHasKey('label', $result);
+        $this->assertSame('order-price', $result['value']);
+        $this->assertSame('整单价格', $result['label']);
+
+        $case = LimitType::SKU_ID;
+        $result = $case->toArray();
+        $this->assertSame('sku-id', $result['value']);
+        $this->assertSame('SKU ID', $result['label']);
+    }
+}

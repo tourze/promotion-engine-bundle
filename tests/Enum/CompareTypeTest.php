@@ -2,12 +2,17 @@
 
 namespace PromotionEngineBundle\Tests\Enum;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PromotionEngineBundle\Enum\CompareType;
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\Selectable;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class CompareTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(CompareType::class)]
+final class CompareTypeTest extends AbstractEnumTestCase
 {
     /**
      * 测试枚举值的完整性
@@ -51,7 +56,7 @@ class CompareTypeTest extends TestCase
     {
         $type = CompareType::from('equal');
         $this->assertSame(CompareType::EQUAL, $type);
-        
+
         $type = CompareType::from('gte');
         $this->assertSame(CompareType::GTE, $type);
     }
@@ -72,8 +77,27 @@ class CompareTypeTest extends TestCase
     {
         $type = CompareType::tryFrom('equal');
         $this->assertSame(CompareType::EQUAL, $type);
-        
+
         $type = CompareType::tryFrom('invalid_value');
         $this->assertNull($type);
     }
-} 
+
+    /**
+     * 测试 toArray 方法 (来自 ItemTrait)
+     */
+    public function testToArray(): void
+    {
+        $case = CompareType::EQUAL;
+        $result = $case->toArray();
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('value', $result);
+        $this->assertArrayHasKey('label', $result);
+        $this->assertSame('equal', $result['value']);
+        $this->assertSame('等于', $result['label']);
+
+        $case = CompareType::GTE;
+        $result = $case->toArray();
+        $this->assertSame('gte', $result['value']);
+        $this->assertSame('大于等于', $result['label']);
+    }
+}

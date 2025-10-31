@@ -1,0 +1,291 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot call method getName\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ActivityProductCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ActivityProductCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/ActivityProductCrudController.php
+
+		-
+			message: '#^Cannot call method count\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Controller/Admin/CampaignCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/CampaignCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/Admin/CampaignCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/CampaignCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/ConstraintCrudController.php
+
+		-
+			message: '#^Cannot call method __toString\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountConditionCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountConditionCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/DiscountConditionCrudController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/DiscountConditionCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/DiscountConditionCrudController.php
+
+		-
+			message: '#^Cannot call method count\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/DiscountCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountFreeConditionCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/DiscountFreeConditionCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/DiscountFreeConditionCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/DiscountRuleCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/DiscountRuleCrudController.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Cannot call method isEmpty\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/ParticipationCrudController.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^Cannot call method getLabel\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^Cannot call method getType\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/ProductRelationCrudController.php
+
+		-
+			message: '#^Cannot call method count\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/TimeLimitActivityCrudController.php
+
+		-
+			message: '#^Cannot call method getUsername\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Admin/TimeLimitActivityCrudController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/TimeLimitActivityCrudController.php
+
+		-
+			message: '#^类 的 DocBlock 必须位于所有 Attributes 之前。$#'
+			count: 1
+			path: src/Controller/Admin/TimeLimitActivityCrudController.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: src/Procedure/ApplyActivityToProducts.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Procedure/ApplyActivityToProducts.php

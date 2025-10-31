@@ -12,7 +12,6 @@ enum CompareType: string implements Labelable, Itemable, Selectable
 {
     use ItemTrait;
     use SelectTrait;
-
     case EQUAL = 'equal';
     case NOT_EQUAL = 'not-equal';
     case GTE = 'gte';

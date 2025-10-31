@@ -2,13 +2,13 @@
 
 namespace PromotionEngineBundle\Entity;
 
-use AntdCpBundle\Builder\Field\DynamicFieldSet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use PromotionEngineBundle\Repository\CampaignRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
@@ -16,6 +16,9 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
+/**
+ * @implements AdminArrayInterface<string, mixed>
+ */
 #[ORM\Entity(repositoryClass: CampaignRepository::class)]
 #[ORM\Table(name: 'ims_promotion_campaign', options: ['comment' => '促销活动'])]
 class Campaign implements AdminArrayInterface, \Stringable
@@ -24,41 +27,40 @@ class Campaign implements AdminArrayInterface, \Stringable
     use TimestampableAware;
     use BlameableAware;
 
-
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 120)]
     #[ORM\Column(length: 120, options: ['comment' => '名称'])]
     private string $title;
 
-
+    #[Assert\Length(max: 65535)]
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '描述'])]
     private ?string $description = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['comment' => '开始时间'])]
     private \DateTimeInterface $startTime;
 
+    #[Assert\NotNull]
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['comment' => '结束时间'])]
     private \DateTimeInterface $endTime;
 
+    #[Assert\Type(type: 'bool')]
     #[ORM\Column(nullable: true, options: ['comment' => '排他'])]
     private ?bool $exclusive = null;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(options: ['comment' => '权重'])]
     private int $weight = 0;
 
     /**
-     * @DynamicFieldSet()
-     *
      * @var Collection<int, Constraint>
      */
-
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: Constraint::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $constraints;
 
     /**
-     * @DynamicFieldSet()
-     *
      * @var Collection<int, Discount>
      */
-
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: Discount::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $discounts;
 
@@ -69,10 +71,10 @@ class Campaign implements AdminArrayInterface, \Stringable
     #[ORM\ManyToMany(targetEntity: Participation::class, mappedBy: 'campaigns')]
     private Collection $participations;
 
+    #[Assert\Type(type: 'bool')]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-
     private ?bool $valid = false;
 
     public function __construct()
@@ -84,24 +86,21 @@ class Campaign implements AdminArrayInterface, \Stringable
 
     public function __toString(): string
     {
-        if ($this->getId() === null) {
+        if (null === $this->getId()) {
             return '';
         }
 
         return $this->getTitle();
     }
 
-
     public function isValid(): ?bool
     {
         return $this->valid;
     }
 
-    public function setValid(?bool $valid): self
+    public function setValid(?bool $valid): void
     {
         $this->valid = $valid;
-
-        return $this;
     }
 
     public function getTitle(): string
@@ -109,11 +108,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
     public function getDescription(): ?string
@@ -121,11 +118,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
     public function getStartTime(): \DateTimeInterface
@@ -133,11 +128,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->startTime;
     }
 
-    public function setStartTime(\DateTimeInterface $startTime): static
+    public function setStartTime(\DateTimeInterface $startTime): void
     {
         $this->startTime = $startTime;
-
-        return $this;
     }
 
     public function getEndTime(): \DateTimeInterface
@@ -145,11 +138,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->endTime;
     }
 
-    public function setEndTime(\DateTimeInterface $endTime): static
+    public function setEndTime(\DateTimeInterface $endTime): void
     {
         $this->endTime = $endTime;
-
-        return $this;
     }
 
     public function isExclusive(): ?bool
@@ -157,11 +148,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->exclusive;
     }
 
-    public function setExclusive(?bool $exclusive): static
+    public function setExclusive(?bool $exclusive): void
     {
         $this->exclusive = $exclusive;
-
-        return $this;
     }
 
     public function getWeight(): int
@@ -169,11 +158,9 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->weight;
     }
 
-    public function setWeight(int $weight): static
+    public function setWeight(int $weight): void
     {
         $this->weight = $weight;
-
-        return $this;
     }
 
     /**
@@ -184,17 +171,15 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->constraints;
     }
 
-    public function addConstraint(Constraint $constraint): static
+    public function addConstraint(Constraint $constraint): void
     {
         if (!$this->constraints->contains($constraint)) {
             $this->constraints->add($constraint);
             $constraint->setCampaign($this);
         }
-
-        return $this;
     }
 
-    public function removeConstraint(Constraint $constraint): static
+    public function removeConstraint(Constraint $constraint): void
     {
         if ($this->constraints->removeElement($constraint)) {
             // set the owning side to null (unless already changed)
@@ -202,8 +187,6 @@ class Campaign implements AdminArrayInterface, \Stringable
                 $constraint->setCampaign(null);
             }
         }
-
-        return $this;
     }
 
     /**
@@ -214,17 +197,15 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->discounts;
     }
 
-    public function addDiscount(Discount $discount): static
+    public function addDiscount(Discount $discount): void
     {
         if (!$this->discounts->contains($discount)) {
             $this->discounts->add($discount);
             $discount->setCampaign($this);
         }
-
-        return $this;
     }
 
-    public function removeDiscount(Discount $discount): static
+    public function removeDiscount(Discount $discount): void
     {
         if ($this->discounts->removeElement($discount)) {
             // set the owning side to null (unless already changed)
@@ -232,10 +213,11 @@ class Campaign implements AdminArrayInterface, \Stringable
                 $discount->setCampaign(null);
             }
         }
-
-        return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function retrieveAdminArray(): array
     {
         return [
@@ -259,22 +241,18 @@ class Campaign implements AdminArrayInterface, \Stringable
         return $this->participations;
     }
 
-    public function addParticipation(Participation $participation): static
+    public function addParticipation(Participation $participation): void
     {
         if (!$this->participations->contains($participation)) {
             $this->participations->add($participation);
             $participation->addCampaign($this);
         }
-
-        return $this;
     }
 
-    public function removeParticipation(Participation $participation): static
+    public function removeParticipation(Participation $participation): void
     {
         if ($this->participations->removeElement($participation)) {
             $participation->removeCampaign($this);
         }
-
-        return $this;
     }
 }

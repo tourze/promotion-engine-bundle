@@ -8,6 +8,7 @@ use PromotionEngineBundle\Enum\CompareType;
 use PromotionEngineBundle\Enum\LimitType;
 use PromotionEngineBundle\Repository\ConstraintRepository;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\Arrayable\AdminArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
@@ -15,6 +16,9 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Traits\BlameableAware;
 
+/**
+ * @implements AdminArrayInterface<string, mixed>
+ */
 #[ORM\Entity(repositoryClass: ConstraintRepository::class)]
 #[ORM\Table(name: 'ims_promotion_limit', options: ['comment' => '促销约束条件'])]
 class Constraint implements \Stringable, AdminArrayInterface
@@ -23,10 +27,10 @@ class Constraint implements \Stringable, AdminArrayInterface
     use TimestampableAware;
     use BlameableAware;
 
+    #[Assert\Type(type: 'bool')]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-
     private ?bool $valid = false;
 
     #[Ignore]
@@ -34,35 +38,35 @@ class Constraint implements \Stringable, AdminArrayInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Campaign $campaign = null;
 
+    #[Assert\Choice(callback: [CompareType::class, 'cases'])]
     #[ORM\Column(length: 30, enumType: CompareType::class, options: ['comment' => '对比类型'])]
     private CompareType $compareType;
 
+    #[Assert\Choice(callback: [LimitType::class, 'cases'])]
     #[ORM\Column(length: 100, enumType: LimitType::class, options: ['comment' => '限制类型'])]
     private LimitType $limitType;
 
+    #[Assert\Length(max: 65535)]
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '范围值'])]
     private ?string $rangeValue = null;
 
     public function __toString(): string
     {
-        if ($this->getId() === null) {
+        if (null === $this->getId()) {
             return '';
         }
 
         return "{$this->getLimitType()->getLabel()} {$this->getCompareType()->getLabel()} {$this->getRangeValue()}";
     }
 
-
     public function isValid(): ?bool
     {
         return $this->valid;
     }
 
-    public function setValid(?bool $valid): self
+    public function setValid(?bool $valid): void
     {
         $this->valid = $valid;
-
-        return $this;
     }
 
     public function getCampaign(): ?Campaign
@@ -70,11 +74,9 @@ class Constraint implements \Stringable, AdminArrayInterface
         return $this->campaign;
     }
 
-    public function setCampaign(?Campaign $campaign): static
+    public function setCampaign(?Campaign $campaign): void
     {
         $this->campaign = $campaign;
-
-        return $this;
     }
 
     public function getCompareType(): CompareType
@@ -82,11 +84,9 @@ class Constraint implements \Stringable, AdminArrayInterface
         return $this->compareType;
     }
 
-    public function setCompareType(CompareType $compareType): static
+    public function setCompareType(CompareType $compareType): void
     {
         $this->compareType = $compareType;
-
-        return $this;
     }
 
     public function getLimitType(): LimitType
@@ -94,11 +94,9 @@ class Constraint implements \Stringable, AdminArrayInterface
         return $this->limitType;
     }
 
-    public function setLimitType(LimitType $limitType): static
+    public function setLimitType(LimitType $limitType): void
     {
         $this->limitType = $limitType;
-
-        return $this;
     }
 
     public function getRangeValue(): ?string
@@ -106,13 +104,14 @@ class Constraint implements \Stringable, AdminArrayInterface
         return $this->rangeValue;
     }
 
-    public function setRangeValue(?string $rangeValue): static
+    public function setRangeValue(?string $rangeValue): void
     {
         $this->rangeValue = $rangeValue;
-
-        return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function retrieveAdminArray(): array
     {
         return [
