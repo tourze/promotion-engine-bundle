@@ -53,6 +53,7 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
         $this->assertArrayHasKey('success', $result);
         $this->assertFalse($result['success']);
         $this->assertArrayHasKey('message', $result);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品列表为空', $result['message']);
     }
 
@@ -78,6 +79,7 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('items', $result);
+        $this->assertIsArray($result['items']);
         $this->assertCount(2, $result['items']);
     }
 
@@ -122,6 +124,7 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
         $this->assertArrayHasKey('success', $result);
         $this->assertFalse($result['success']);
         $this->assertArrayHasKey('message', $result);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品列表为空', $result['message']);
     }
 

@@ -280,7 +280,9 @@ final class TimeLimitActivityRepositoryTest extends AbstractRepositoryTestCase
         $this->assertNotEmpty($results);
 
         // 验证所有结果都是秒杀类型
+        $this->assertIsArray($results);
         foreach ($results as $result) {
+            $this->assertInstanceOf(TimeLimitActivity::class, $result);
             $this->assertEquals(ActivityType::LIMITED_TIME_SECKILL, $result->getActivityType());
             $this->assertTrue($result->isValid());
         }
@@ -419,7 +421,9 @@ final class TimeLimitActivityRepositoryTest extends AbstractRepositoryTestCase
         $this->assertNotEmpty($results);
 
         // 验证所有结果都是秒杀类型
+        $this->assertIsArray($results);
         foreach ($results as $result) {
+            $this->assertInstanceOf(TimeLimitActivity::class, $result);
             $this->assertEquals(ActivityType::LIMITED_TIME_SECKILL, $result->getActivityType());
             $this->assertTrue($result->isValid());
         }

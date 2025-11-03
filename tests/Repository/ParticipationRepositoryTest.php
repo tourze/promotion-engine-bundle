@@ -85,7 +85,7 @@ final class ParticipationRepositoryTest extends AbstractRepositoryTestCase
 
         $found = false;
         foreach ($participationsWithNullDiscountPrice as $participation) {
-            if ('100.00' === $participation->getTotalPrice()) {
+            if (is_object($participation) && method_exists($participation, 'getTotalPrice') && '100.00' === $participation->getTotalPrice()) {
                 $found = true;
                 break;
             }
@@ -158,6 +158,7 @@ final class ParticipationRepositoryTest extends AbstractRepositoryTestCase
         ;
 
         $this->assertNotNull($foundByCampaign);
+        $this->assertTrue(is_object($foundByCampaign) && method_exists($foundByCampaign, 'getTotalPrice'));
         $this->assertSame('100.00', $foundByCampaign->getTotalPrice());
     }
 

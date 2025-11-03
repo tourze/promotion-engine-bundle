@@ -60,6 +60,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         $result = $this->procedure->execute();
 
         $this->assertTrue($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('成功将 2 个商品添加到活动中', $result['message']);
         $this->assertSame(0, $result['addedCount']);
         $this->assertSame(0, $result['failedCount']);
@@ -143,6 +144,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('活动不存在或已失效', $result['message']);
     }
 
@@ -165,6 +167,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('活动ID不能为空', $result['message']);
     }
 
@@ -185,6 +188,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品列表不能为空', $result['message']);
     }
 
@@ -212,6 +216,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品 product_1 参数无效', $result['message']);
     }
 
@@ -239,6 +244,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品 product_1 参数无效', $result['message']);
     }
 
@@ -272,6 +278,7 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         }
 
         $this->assertFalse($result['success']);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品ID列表中存在重复', $result['message']);
     }
 

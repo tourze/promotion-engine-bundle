@@ -173,6 +173,7 @@ final class ActivityDiscountDetailTest extends TestCase
         // 验证metadata中的特定值
         $this->assertEquals(2, $detail->metadata['min_quantity']);
         $this->assertEquals(10, $detail->metadata['max_quantity']);
+        $this->assertIsArray($detail->metadata['tier_discounts']);
         $this->assertCount(3, $detail->metadata['tier_discounts']);
     }
 

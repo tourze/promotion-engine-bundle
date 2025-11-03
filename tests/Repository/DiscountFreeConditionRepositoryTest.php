@@ -86,7 +86,7 @@ final class DiscountFreeConditionRepositoryTest extends AbstractRepositoryTestCa
 
         $found = false;
         foreach ($conditionsWithData as $condition) {
-            if ('5' === $condition->getPurchaseQuantity()) {
+            if (is_object($condition) && method_exists($condition, 'getPurchaseQuantity') && '5' === $condition->getPurchaseQuantity()) {
                 $found = true;
                 break;
             }

@@ -218,6 +218,7 @@ class BatchDiscountCalculationServiceTest extends AbstractIntegrationTestCase
         $validation = $this->service->validateBatchSize($largeBatch);
 
         $this->assertTrue($validation['valid']); // 虽然数量大，但还是有效的
+        $this->assertIsArray($validation['warnings']);
         $this->assertContains('批量输入数量较大，建议分批处理', $validation['warnings']);
     }
 

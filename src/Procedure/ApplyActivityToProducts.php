@@ -77,10 +77,10 @@ class ApplyActivityToProducts extends LockableProcedure
             $activityStock = $productData['activityStock'] ?? 0;
 
             $products[] = new ApplyActivityProductInput(
-                productId: is_string($productId) ? $productId : (string) $productId,
-                activityPrice: is_string($activityPrice) ? $activityPrice : (string) $activityPrice,
-                limitPerUser: is_int($limitPerUser) ? $limitPerUser : (int) $limitPerUser,
-                activityStock: is_int($activityStock) ? $activityStock : (int) $activityStock,
+                productId: is_scalar($productId) ? (string) $productId : '',
+                activityPrice: is_scalar($activityPrice) ? (string) $activityPrice : '0.00',
+                limitPerUser: is_numeric($limitPerUser) ? (int) $limitPerUser : 1,
+                activityStock: is_numeric($activityStock) ? (int) $activityStock : 0,
             );
         }
 

@@ -87,7 +87,7 @@ final class DiscountConditionRepositoryTest extends AbstractRepositoryTestCase
 
         $found = false;
         foreach ($conditionsWithNullCondition3 as $condition) {
-            if ('空值测试条件' === $condition->getCondition1()) {
+            if (is_object($condition) && method_exists($condition, 'getCondition1') && '空值测试条件' === $condition->getCondition1()) {
                 $found = true;
                 break;
             }

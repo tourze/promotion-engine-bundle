@@ -87,7 +87,7 @@ final class ProductRelationRepositoryTest extends AbstractRepositoryTestCase
 
         $found = false;
         foreach ($relationsWithNullSkuId as $relation) {
-            if ('1001' === $relation->getSpuId()) {
+            if (is_object($relation) && method_exists($relation, 'getSpuId') && '1001' === $relation->getSpuId()) {
                 $found = true;
                 break;
             }

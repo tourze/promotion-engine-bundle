@@ -85,7 +85,8 @@ final class DiscountRepositoryTest extends AbstractRepositoryTestCase
 
         $found = false;
         foreach ($discountsWithNullRemark as $discount) {
-            if (DiscountType::REDUCTION === $discount->getType() && '100.00' === $discount->getValue()) {
+            if (is_object($discount) && method_exists($discount, 'getType') && method_exists($discount, 'getValue')
+                && DiscountType::REDUCTION === $discount->getType() && '100.00' === $discount->getValue()) {
                 $found = true;
                 break;
             }

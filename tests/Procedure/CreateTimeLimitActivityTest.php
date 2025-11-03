@@ -91,7 +91,9 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
         if (!isset($result['success']) || true !== $result['success']) {
-            self::fail('Activity creation failed: ' . ($result['message'] ?? 'Unknown error'));
+            $message = $result['message'] ?? 'Unknown error';
+            $messageStr = is_scalar($message) ? (string) $message : (is_object($message) ? method_exists($message, '__toString') ? (string) $message : 'Unknown error' : 'Unknown error');
+            self::fail('Activity creation failed: ' . $messageStr);
         }
         $this->assertTrue($result['success']);
         $this->assertArrayHasKey('activityId', $result);
@@ -186,6 +188,7 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
         $this->assertArrayHasKey('success', $result);
         $this->assertFalse($result['success']);
         $this->assertArrayHasKey('message', $result);
+        $this->assertIsString($result['message']);
         $this->assertStringContainsString('活动类型无效', $result['message']);
     }
 }
