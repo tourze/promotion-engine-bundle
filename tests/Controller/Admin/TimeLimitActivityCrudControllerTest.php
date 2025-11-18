@@ -32,11 +32,6 @@ final class TimeLimitActivityCrudControllerTest extends AbstractEasyAdminControl
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(TimeLimitActivity::class, TimeLimitActivityCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

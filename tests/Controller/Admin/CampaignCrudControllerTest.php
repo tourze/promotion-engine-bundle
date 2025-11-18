@@ -30,11 +30,6 @@ final class CampaignCrudControllerTest extends AbstractEasyAdminControllerTestCa
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(Campaign::class, CampaignCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

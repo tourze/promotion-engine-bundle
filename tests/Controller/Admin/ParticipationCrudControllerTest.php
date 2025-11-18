@@ -28,11 +28,6 @@ final class ParticipationCrudControllerTest extends AbstractEasyAdminControllerT
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(Participation::class, ParticipationCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

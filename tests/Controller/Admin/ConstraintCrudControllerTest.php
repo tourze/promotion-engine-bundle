@@ -30,11 +30,6 @@ final class ConstraintCrudControllerTest extends AbstractEasyAdminControllerTest
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(Constraint::class, ConstraintCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

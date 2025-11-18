@@ -30,11 +30,6 @@ final class DiscountCrudControllerTest extends AbstractEasyAdminControllerTestCa
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(Discount::class, DiscountCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

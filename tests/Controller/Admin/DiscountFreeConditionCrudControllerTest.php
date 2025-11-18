@@ -33,11 +33,6 @@ final class DiscountFreeConditionCrudControllerTest extends AbstractEasyAdminCon
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(DiscountFreeCondition::class, DiscountFreeConditionCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

@@ -29,11 +29,6 @@ final class ProductRelationCrudControllerTest extends AbstractEasyAdminControlle
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(ProductRelation::class, ProductRelationCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);

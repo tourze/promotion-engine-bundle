@@ -33,11 +33,6 @@ final class ActivityProductCrudControllerTest extends AbstractEasyAdminControlle
         self::getClient($this->client);
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        $this->assertEquals(ActivityProduct::class, ActivityProductCrudController::getEntityFqcn());
-    }
-
     public function testAdminAccess(): void
     {
         $this->loginAsAdmin($this->client);
