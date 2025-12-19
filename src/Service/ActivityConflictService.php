@@ -8,10 +8,10 @@ use PromotionEngineBundle\Repository\TimeLimitActivityRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 #[Autoconfigure(public: true)]
-readonly class ActivityConflictService
+class ActivityConflictService
 {
     public function __construct(
-        private TimeLimitActivityRepository $activityRepository,
+        private readonly TimeLimitActivityRepository $activityRepository,
     ) {
     }
 

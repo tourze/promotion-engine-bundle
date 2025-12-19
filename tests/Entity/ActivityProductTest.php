@@ -12,7 +12,7 @@ use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
  * @internal
  */
 #[CoversClass(ActivityProduct::class)]
-class ActivityProductTest extends AbstractEntityTestCase
+final class ActivityProductTest extends AbstractEntityTestCase
 {
     protected function createEntity(): object
     {

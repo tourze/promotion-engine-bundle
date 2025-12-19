@@ -10,7 +10,7 @@ use Tourze\PHPUnitBase\AbstractExceptionTestCase;
  * @internal
  */
 #[CoversClass(ActivityException::class)]
-class ActivityExceptionTest extends AbstractExceptionTestCase
+final class ActivityExceptionTest extends AbstractExceptionTestCase
 {
     public function testConstructor(): void
     {

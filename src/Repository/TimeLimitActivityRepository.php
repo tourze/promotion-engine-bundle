@@ -15,7 +15,7 @@ use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
  * @extends ServiceEntityRepository<TimeLimitActivity>
  */
 #[AsRepository(entityClass: TimeLimitActivity::class)]
-class TimeLimitActivityRepository extends ServiceEntityRepository
+final class TimeLimitActivityRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -13,7 +13,7 @@ use PromotionEngineBundle\DTO\CalculateActivityDiscountItemResult;
  * @internal
  */
 #[CoversClass(CalculateActivityDiscountItemResult::class)]
-class CalculateActivityDiscountItemResultTest extends TestCase
+final class CalculateActivityDiscountItemResultTest extends TestCase
 {
     public function testConstructor(): void
     {

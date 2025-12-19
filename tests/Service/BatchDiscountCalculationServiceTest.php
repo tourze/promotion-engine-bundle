@@ -14,7 +14,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(BatchDiscountCalculationService::class)]
-class BatchDiscountCalculationServiceTest extends AbstractIntegrationTestCase
+final class BatchDiscountCalculationServiceTest extends AbstractIntegrationTestCase
 {
     private BatchDiscountCalculationService $service;
 

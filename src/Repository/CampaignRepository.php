@@ -11,7 +11,7 @@ use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
  * @extends ServiceEntityRepository<Campaign>
  */
 #[AsRepository(entityClass: Campaign::class)]
-class CampaignRepository extends ServiceEntityRepository
+final class CampaignRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

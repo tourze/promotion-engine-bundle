@@ -9,13 +9,15 @@ use PromotionEngineBundle\Entity\TimeLimitActivity;
 use PromotionEngineBundle\Enum\ActivityStatus;
 use PromotionEngineBundle\Enum\ActivityType;
 use PromotionEngineBundle\Exception\ActivityException;
+use PromotionEngineBundle\Param\CreateTimeLimitActivityParam;
 use PromotionEngineBundle\Repository\TimeLimitActivityRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
-use Tourze\JsonRPC\Core\Attribute\MethodParam;
 use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Contracts\RpcParamInterface;
+use Tourze\JsonRPC\Core\Result\ArrayResult;
 use Tourze\JsonRPCLockBundle\Procedure\LockableProcedure;
 use Tourze\JsonRPCLogBundle\Attribute\Log;
 
@@ -27,40 +29,6 @@ use Tourze\JsonRPCLogBundle\Attribute\Log;
 #[Log]
 class CreateTimeLimitActivity extends LockableProcedure
 {
-    #[MethodParam(description: '活动名称')]
-    public string $name;
-
-    #[MethodParam(description: '活动描述')]
-    public string $description;
-
-    #[MethodParam(description: '开始时间（YYYY-MM-DD HH:mm:ss）')]
-    public string $startTime;
-
-    #[MethodParam(description: '结束时间（YYYY-MM-DD HH:mm:ss）')]
-    public string $endTime;
-
-    #[MethodParam(description: '活动类型')]
-    public string $activityType;
-
-    /** @var string[] */
-    #[MethodParam(description: '参与商品ID列表')]
-    public array $productIds;
-
-    #[MethodParam(description: '活动优先级，默认为0')]
-    public int $priority = 0;
-
-    #[MethodParam(description: '是否独占（同商品不能参与其他活动），默认为false')]
-    public bool $exclusive = false;
-
-    #[MethodParam(description: '活动限量（限量抢购专用），默认为null')]
-    public ?int $totalLimit = null;
-
-    #[MethodParam(description: '是否启用预热，默认为false')]
-    public bool $preheatEnabled = false;
-
-    #[MethodParam(description: '预热开始时间（YYYY-MM-DD HH:mm:ss），默认为null')]
-    public ?string $preheatStartTime = null;
-
     public function __construct(
         private readonly TimeLimitActivityRepository $activityRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -68,12 +36,12 @@ class CreateTimeLimitActivity extends LockableProcedure
     }
 
     /**
-     * @return array<string, mixed>
+     * @phpstan-param CreateTimeLimitActivityParam $param
      */
-    public function execute(): array
+    public function execute(CreateTimeLimitActivityParam|RpcParamInterface $param): ArrayResult
     {
         try {
-            $input = $this->buildInput();
+            $input = $this->buildInput($param);
             $this->validateInput($input);
 
             $this->entityManager->beginTransaction();
@@ -98,25 +66,25 @@ class CreateTimeLimitActivity extends LockableProcedure
         }
     }
 
-    private function buildInput(): CreateTimeLimitActivityInput
+    private function buildInput(CreateTimeLimitActivityParam $param): CreateTimeLimitActivityInput
     {
-        $activityType = ActivityType::tryFrom($this->activityType);
+        $activityType = ActivityType::tryFrom($param->activityType);
         if (null === $activityType) {
-            throw ActivityException::invalidProductIds("活动类型无效: {$this->activityType}");
+            throw ActivityException::invalidProductIds("活动类型无效: {$param->activityType}");
         }
 
         return new CreateTimeLimitActivityInput(
-            name: $this->name,
-            description: $this->description,
-            startTime: $this->startTime,
-            endTime: $this->endTime,
+            name: $param->name,
+            description: $param->description,
+            startTime: $param->startTime,
+            endTime: $param->endTime,
             activityType: $activityType,
-            productIds: $this->productIds,
-            priority: $this->priority,
-            exclusive: $this->exclusive,
-            totalLimit: $this->totalLimit,
-            preheatEnabled: $this->preheatEnabled,
-            preheatStartTime: $this->preheatStartTime,
+            productIds: $param->productIds,
+            priority: $param->priority,
+            exclusive: $param->exclusive,
+            totalLimit: $param->totalLimit,
+            preheatEnabled: $param->preheatEnabled,
+            preheatStartTime: $param->preheatStartTime,
         );
     }
 
@@ -193,14 +161,10 @@ class CreateTimeLimitActivity extends LockableProcedure
         $activity->setStatus($status);
         $activity->setValid(true);
 
-        return $activity;
+        return new ArrayResult($activity);
     }
 
     /**
      * @return array<string, mixed>|null
      */
-    public static function getMockResult(): ?array
-    {
-        return CreateTimeLimitActivityResult::success('1234567890123456789')->toArray();
-    }
 }

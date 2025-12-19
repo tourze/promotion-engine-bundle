@@ -19,7 +19,7 @@ use Tourze\Symfony\CronJob\Attribute\AsCronTask;
 )]
 #[AsCronTask(expression: '*/5 * * * *')]
 #[WithMonologChannel(channel: 'promotion_engine')]
-class UpdateTimeLimitActivityStatusCommand extends Command
+final class UpdateTimeLimitActivityStatusCommand extends Command
 {
     protected const NAME = 'promotion:update-activity-status';
 

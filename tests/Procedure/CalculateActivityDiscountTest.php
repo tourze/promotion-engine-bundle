@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PromotionEngineBundle\Tests\Procedure;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PromotionEngineBundle\Param\CalculateActivityDiscountParam;
 use PromotionEngineBundle\Procedure\CalculateActivityDiscount;
-use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
+use Tourze\PHPUnitJsonRPC\AbstractProcedureTestCase;
 
 /**
  * @internal
  */
 #[CoversClass(CalculateActivityDiscount::class)]
 #[RunTestsInSeparateProcesses]
-class CalculateActivityDiscountTest extends AbstractProcedureTestCase
+final class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 {
     private CalculateActivityDiscount $procedure;
 
@@ -23,17 +26,19 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
     public function testSuccessfulCalculateDiscount(): void
     {
-        $this->procedure->items = [
-            [
-                'productId' => 'product_1',
-                'skuId' => 'sku_1',
-                'quantity' => 2,
-                'price' => 100.0,
+        $param = new CalculateActivityDiscountParam(
+            items: [
+                [
+                    'productId' => 'product_1',
+                    'skuId' => 'sku_1',
+                    'quantity' => 2,
+                    'price' => 100.0,
+                ],
             ],
-        ];
-        $this->procedure->userId = 'user_123';
+            userId: 'user_123',
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -44,10 +49,11 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
     public function testEmptyItemsList(): void
     {
-        $this->procedure->items = [];
-        $this->procedure->userId = null;
+        $param = new CalculateActivityDiscountParam(
+            items: [],
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -59,23 +65,25 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
     public function testBuildInputWithValidData(): void
     {
-        $this->procedure->items = [
-            [
-                'productId' => 'product_1',
-                'skuId' => 'sku_1',
-                'quantity' => 1,
-                'price' => 50.0,
+        $param = new CalculateActivityDiscountParam(
+            items: [
+                [
+                    'productId' => 'product_1',
+                    'skuId' => 'sku_1',
+                    'quantity' => 1,
+                    'price' => 50.0,
+                ],
+                [
+                    'productId' => 'product_2',
+                    'skuId' => 'sku_2',
+                    'quantity' => 3,
+                    'price' => 30.0,
+                ],
             ],
-            [
-                'productId' => 'product_2',
-                'skuId' => 'sku_2',
-                'quantity' => 3,
-                'price' => 30.0,
-            ],
-        ];
-        $this->procedure->userId = 'user_456';
+            userId: 'user_456',
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('items', $result);
@@ -85,18 +93,20 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
     public function testExecuteMethodDirectly(): void
     {
-        $this->procedure->items = [
-            [
-                'productId' => 'direct_product_1',
-                'skuId' => 'direct_sku_1',
-                'quantity' => 1,
-                'price' => 80.0,
+        $param = new CalculateActivityDiscountParam(
+            items: [
+                [
+                    'productId' => 'direct_product_1',
+                    'skuId' => 'direct_sku_1',
+                    'quantity' => 1,
+                    'price' => 80.0,
+                ],
             ],
-        ];
-        $this->procedure->userId = 'direct_user_123';
+            userId: 'direct_user_123',
+        );
 
         // 直接调用execute()方法
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -114,11 +124,13 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
 
     public function testExecuteWithEmptyItemsReturnError(): void
     {
-        $this->procedure->items = [];
-        $this->procedure->userId = 'test_user';
+        $param = new CalculateActivityDiscountParam(
+            items: [],
+            userId: 'test_user',
+        );
 
         // 直接调用execute()方法测试空商品列表情况
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -126,18 +138,5 @@ class CalculateActivityDiscountTest extends AbstractProcedureTestCase
         $this->assertArrayHasKey('message', $result);
         $this->assertIsString($result['message']);
         $this->assertStringContainsString('商品列表为空', $result['message']);
-    }
-
-    public function testGetMockResult(): void
-    {
-        $mockResult = CalculateActivityDiscount::getMockResult();
-
-        $this->assertIsArray($mockResult);
-        $this->assertArrayHasKey('success', $mockResult);
-        $this->assertTrue($mockResult['success']);
-        $this->assertArrayHasKey('items', $mockResult);
-        $this->assertArrayHasKey('originalTotalAmount', $mockResult);
-        $this->assertArrayHasKey('finalTotalAmount', $mockResult);
-        $this->assertArrayHasKey('appliedActivities', $mockResult);
     }
 }

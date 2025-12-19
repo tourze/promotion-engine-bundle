@@ -11,7 +11,7 @@ use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
  * @extends ServiceEntityRepository<ProductRelation>
  */
 #[AsRepository(entityClass: ProductRelation::class)]
-class ProductRelationRepository extends ServiceEntityRepository
+final class ProductRelationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

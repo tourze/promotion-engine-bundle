@@ -4,7 +4,7 @@ namespace PromotionEngineBundle\DependencyInjection;
 
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class PromotionEngineExtension extends AutoExtension
+final class PromotionEngineExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {

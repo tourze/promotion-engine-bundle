@@ -12,7 +12,7 @@ use PromotionEngineBundle\DTO\ApplyActivityProductInput;
  * @internal
  */
 #[CoversClass(ApplyActivityProductInput::class)]
-class ApplyActivityProductInputTest extends TestCase
+final class ApplyActivityProductInputTest extends TestCase
 {
     public function testConstructor(): void
     {

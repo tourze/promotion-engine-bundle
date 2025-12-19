@@ -14,7 +14,7 @@ use PromotionEngineBundle\DTO\CalculateActivityDiscountResult;
  * @internal
  */
 #[CoversClass(CalculateActivityDiscountResult::class)]
-class CalculateActivityDiscountResultTest extends TestCase
+final class CalculateActivityDiscountResultTest extends TestCase
 {
     public function testConstructor(): void
     {

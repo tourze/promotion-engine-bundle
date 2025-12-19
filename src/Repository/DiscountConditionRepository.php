@@ -11,7 +11,7 @@ use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
  * @extends ServiceEntityRepository<DiscountCondition>
  */
 #[AsRepository(entityClass: DiscountCondition::class)]
-class DiscountConditionRepository extends ServiceEntityRepository
+final class DiscountConditionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

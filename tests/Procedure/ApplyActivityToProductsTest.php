@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PromotionEngineBundle\Tests\Procedure;
 
 use Doctrine\DBAL\Exception\NoActiveTransaction;
@@ -9,17 +11,18 @@ use PromotionEngineBundle\Entity\ActivityProduct;
 use PromotionEngineBundle\Entity\TimeLimitActivity;
 use PromotionEngineBundle\Enum\ActivityStatus;
 use PromotionEngineBundle\Enum\ActivityType;
+use PromotionEngineBundle\Param\ApplyActivityToProductsParam;
 use PromotionEngineBundle\Procedure\ApplyActivityToProducts;
 use PromotionEngineBundle\Repository\ActivityProductRepository;
 use PromotionEngineBundle\Repository\TimeLimitActivityRepository;
-use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
+use Tourze\PHPUnitJsonRPC\AbstractProcedureTestCase;
 
 /**
  * @internal
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(ApplyActivityToProducts::class)]
-class ApplyActivityToProductsTest extends AbstractProcedureTestCase
+final class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 {
     private ApplyActivityToProducts $procedure;
 
@@ -41,23 +44,26 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '99.99',
-                'limitPerUser' => 2,
-                'activityStock' => 100,
-            ],
-            [
-                'productId' => 'product_2',
-                'activityPrice' => '199.99',
-                'limitPerUser' => 1,
-                'activityStock' => 50,
-            ],
-        ];
 
-        $result = $this->procedure->execute();
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '99.99',
+                    'limitPerUser' => 2,
+                    'activityStock' => 100,
+                ],
+                [
+                    'productId' => 'product_2',
+                    'activityPrice' => '199.99',
+                    'limitPerUser' => 1,
+                    'activityStock' => 50,
+                ],
+            ],
+        );
+
+        $result = $this->procedure->execute($param);
 
         $this->assertTrue($result['success']);
         $this->assertIsString($result['message']);
@@ -99,17 +105,20 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'existing_product',
-                'activityPrice' => '75.00',
-                'limitPerUser' => 3,
-                'activityStock' => 150,
-            ],
-        ];
 
-        $result = $this->procedure->execute();
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'existing_product',
+                    'activityPrice' => '75.00',
+                    'limitPerUser' => 3,
+                    'activityStock' => 150,
+                ],
+            ],
+        );
+
+        $result = $this->procedure->execute($param);
 
         $this->assertTrue($result['success']);
 
@@ -127,18 +136,20 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
     public function testInvalidActivityId(): void
     {
-        $this->procedure->activityId = 'nonexistent_activity';
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '99.99',
-                'limitPerUser' => 1,
-                'activityStock' => 100,
+        $param = new ApplyActivityToProductsParam(
+            activityId: 'nonexistent_activity',
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '99.99',
+                    'limitPerUser' => 1,
+                    'activityStock' => 100,
+                ],
             ],
-        ];
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '活动不存在或已失效'];
         }
@@ -150,18 +161,20 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
     public function testEmptyActivityId(): void
     {
-        $this->procedure->activityId = '';
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '99.99',
-                'limitPerUser' => 1,
-                'activityStock' => 100,
+        $param = new ApplyActivityToProductsParam(
+            activityId: '',
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '99.99',
+                    'limitPerUser' => 1,
+                    'activityStock' => 100,
+                ],
             ],
-        ];
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '活动ID不能为空'];
         }
@@ -178,11 +191,14 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [];
+
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [],
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '商品列表不能为空'];
         }
@@ -199,18 +215,21 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => 'invalid_price',
-                'limitPerUser' => 1,
-                'activityStock' => 100,
+
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => 'invalid_price',
+                    'limitPerUser' => 1,
+                    'activityStock' => 100,
+                ],
             ],
-        ];
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '商品 product_1 参数无效'];
         }
@@ -227,18 +246,21 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '99.99',
-                'limitPerUser' => 0,
-                'activityStock' => 100,
+
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '99.99',
+                    'limitPerUser' => 0,
+                    'activityStock' => 100,
+                ],
             ],
-        ];
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '商品 product_1 参数无效'];
         }
@@ -255,24 +277,27 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '99.99',
-                'limitPerUser' => 1,
-                'activityStock' => 100,
+
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '99.99',
+                    'limitPerUser' => 1,
+                    'activityStock' => 100,
+                ],
+                [
+                    'productId' => 'product_1',
+                    'activityPrice' => '199.99',
+                    'limitPerUser' => 2,
+                    'activityStock' => 50,
+                ],
             ],
-            [
-                'productId' => 'product_1',
-                'activityPrice' => '199.99',
-                'limitPerUser' => 2,
-                'activityStock' => 50,
-            ],
-        ];
+        );
 
         try {
-            $result = $this->procedure->execute();
+            $result = $this->procedure->execute($param);
         } catch (NoActiveTransaction $e) {
             $result = ['success' => false, 'message' => '商品ID列表中存在重复'];
         }
@@ -289,18 +314,21 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
 
         $activityId = $activity->getId();
         $this->assertNotNull($activityId, 'Activity ID cannot be null');
-        $this->procedure->activityId = $activityId;
-        $this->procedure->products = [
-            [
-                'productId' => 'test_product_direct',
-                'activityPrice' => '75.50',
-                'limitPerUser' => 3,
-                'activityStock' => 200,
+
+        $param = new ApplyActivityToProductsParam(
+            activityId: $activityId,
+            products: [
+                [
+                    'productId' => 'test_product_direct',
+                    'activityPrice' => '75.50',
+                    'limitPerUser' => 3,
+                    'activityStock' => 200,
+                ],
             ],
-        ];
+        );
 
         // 直接调用execute()方法
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -310,16 +338,6 @@ class ApplyActivityToProductsTest extends AbstractProcedureTestCase
         $this->assertTrue($result['success']);
         $this->assertGreaterThanOrEqual(0, $result['addedCount']);
         $this->assertGreaterThanOrEqual(0, $result['failedCount']);
-    }
-
-    public function testGetMockResult(): void
-    {
-        $mockResult = ApplyActivityToProducts::getMockResult();
-
-        $this->assertIsArray($mockResult);
-        $this->assertTrue($mockResult['success']);
-        $this->assertSame(0, $mockResult['addedCount']);
-        $this->assertSame(0, $mockResult['failedCount']);
     }
 
     private function createTestActivity(): TimeLimitActivity

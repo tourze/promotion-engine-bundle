@@ -16,7 +16,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractRepositoryTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(ActivityProductRepository::class)]
-class ActivityProductRepositoryTest extends AbstractRepositoryTestCase
+final class ActivityProductRepositoryTest extends AbstractRepositoryTestCase
 {
     private ActivityProductRepository $repository;
 

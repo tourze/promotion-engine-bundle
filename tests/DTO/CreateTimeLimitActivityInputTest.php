@@ -13,7 +13,7 @@ use PromotionEngineBundle\Enum\ActivityType;
  * @internal
  */
 #[CoversClass(CreateTimeLimitActivityInput::class)]
-class CreateTimeLimitActivityInputTest extends TestCase
+final class CreateTimeLimitActivityInputTest extends TestCase
 {
     public function testConstructor(): void
     {

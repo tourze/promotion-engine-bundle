@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PromotionEngineBundle\Tests\Procedure;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PromotionEngineBundle\Entity\TimeLimitActivity;
 use PromotionEngineBundle\Enum\ActivityType;
+use PromotionEngineBundle\Param\CreateTimeLimitActivityParam;
 use PromotionEngineBundle\Procedure\CreateTimeLimitActivity;
 use PromotionEngineBundle\Repository\TimeLimitActivityRepository;
-use Tourze\JsonRPC\Core\Tests\AbstractProcedureTestCase;
+use Tourze\PHPUnitJsonRPC\AbstractProcedureTestCase;
 
 /**
  * @internal
  */
 #[CoversClass(CreateTimeLimitActivity::class)]
 #[RunTestsInSeparateProcesses]
-class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
+final class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 {
     private CreateTimeLimitActivity $procedure;
 
@@ -29,19 +32,19 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testSuccessfulCreateActivity(): void
     {
-        $this->procedure->name = '测试限时活动';
-        $this->procedure->description = '测试描述';
-        $this->procedure->startTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->activityType = ActivityType::LIMITED_TIME_DISCOUNT->value;
-        $this->procedure->productIds = ['product_1', 'product_2'];
-        $this->procedure->priority = 1;
-        $this->procedure->exclusive = false;
-        $this->procedure->preheatEnabled = false;
-        $this->procedure->preheatStartTime = null;
-        $this->procedure->totalLimit = null;
+        $param = new CreateTimeLimitActivityParam(
+            name: '测试限时活动',
+            description: '测试描述',
+            startTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s'),
+            activityType: ActivityType::LIMITED_TIME_DISCOUNT->value,
+            productIds: ['product_1', 'product_2'],
+            priority: 1,
+            exclusive: false,
+            preheatEnabled: false,
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -52,19 +55,19 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testCreateActivityWithInvalidTimeRange(): void
     {
-        $this->procedure->name = '测试限时活动';
-        $this->procedure->description = '测试描述';
-        $this->procedure->startTime = (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'); // 结束时间早于开始时间
-        $this->procedure->activityType = ActivityType::LIMITED_TIME_DISCOUNT->value;
-        $this->procedure->productIds = ['product_1'];
-        $this->procedure->priority = 1;
-        $this->procedure->exclusive = false;
-        $this->procedure->preheatEnabled = false;
-        $this->procedure->preheatStartTime = null;
-        $this->procedure->totalLimit = null;
+        $param = new CreateTimeLimitActivityParam(
+            name: '测试限时活动',
+            description: '测试描述',
+            startTime: (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'), // 结束时间早于开始时间
+            activityType: ActivityType::LIMITED_TIME_DISCOUNT->value,
+            productIds: ['product_1'],
+            priority: 1,
+            exclusive: false,
+            preheatEnabled: false,
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -74,19 +77,21 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testCreateActivityWithPreheat(): void
     {
-        $this->procedure->name = '测试预热活动';
-        $this->procedure->description = '测试预热描述';
-        $this->procedure->startTime = (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+3 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->activityType = ActivityType::LIMITED_TIME_SECKILL->value;
-        $this->procedure->productIds = ['product_1'];
-        $this->procedure->priority = 1;
-        $this->procedure->exclusive = true;
-        $this->procedure->preheatEnabled = true;
-        $this->procedure->preheatStartTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
-        $this->procedure->totalLimit = 100;
+        $param = new CreateTimeLimitActivityParam(
+            name: '测试预热活动',
+            description: '测试预热描述',
+            startTime: (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+3 hours'))->format('Y-m-d H:i:s'),
+            activityType: ActivityType::LIMITED_TIME_SECKILL->value,
+            productIds: ['product_1'],
+            priority: 1,
+            exclusive: true,
+            totalLimit: 100,
+            preheatEnabled: true,
+            preheatStartTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'),
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -109,19 +114,19 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testCreateActivityWithEmptyName(): void
     {
-        $this->procedure->name = '';
-        $this->procedure->description = '测试描述';
-        $this->procedure->startTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->activityType = ActivityType::LIMITED_TIME_DISCOUNT->value;
-        $this->procedure->productIds = ['product_1'];
-        $this->procedure->priority = 1;
-        $this->procedure->exclusive = false;
-        $this->procedure->preheatEnabled = false;
-        $this->procedure->preheatStartTime = null;
-        $this->procedure->totalLimit = null;
+        $param = new CreateTimeLimitActivityParam(
+            name: '',
+            description: '测试描述',
+            startTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s'),
+            activityType: ActivityType::LIMITED_TIME_DISCOUNT->value,
+            productIds: ['product_1'],
+            priority: 1,
+            exclusive: false,
+            preheatEnabled: false,
+        );
 
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -131,20 +136,20 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testExecuteMethodDirectly(): void
     {
-        $this->procedure->name = '直接测试活动';
-        $this->procedure->description = '直接调用execute方法测试';
-        $this->procedure->startTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+3 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->activityType = ActivityType::LIMITED_TIME_DISCOUNT->value;
-        $this->procedure->productIds = ['direct_test_product_1', 'direct_test_product_2'];
-        $this->procedure->priority = 5;
-        $this->procedure->exclusive = true;
-        $this->procedure->preheatEnabled = false;
-        $this->procedure->preheatStartTime = null;
-        $this->procedure->totalLimit = null;
+        $param = new CreateTimeLimitActivityParam(
+            name: '直接测试活动',
+            description: '直接调用execute方法测试',
+            startTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+3 hours'))->format('Y-m-d H:i:s'),
+            activityType: ActivityType::LIMITED_TIME_DISCOUNT->value,
+            productIds: ['direct_test_product_1', 'direct_test_product_2'],
+            priority: 5,
+            exclusive: true,
+            preheatEnabled: false,
+        );
 
         // 直接调用execute()方法
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);
@@ -169,20 +174,20 @@ class CreateTimeLimitActivityTest extends AbstractProcedureTestCase
 
     public function testExecuteWithInvalidActivityType(): void
     {
-        $this->procedure->name = '无效类型测试活动';
-        $this->procedure->description = '测试无效活动类型';
-        $this->procedure->startTime = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
-        $this->procedure->endTime = (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s');
-        $this->procedure->activityType = 'invalid_activity_type';
-        $this->procedure->productIds = ['product_1'];
-        $this->procedure->priority = 1;
-        $this->procedure->exclusive = false;
-        $this->procedure->preheatEnabled = false;
-        $this->procedure->preheatStartTime = null;
-        $this->procedure->totalLimit = null;
+        $param = new CreateTimeLimitActivityParam(
+            name: '无效类型测试活动',
+            description: '测试无效活动类型',
+            startTime: (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s'),
+            endTime: (new \DateTimeImmutable('+2 hours'))->format('Y-m-d H:i:s'),
+            activityType: 'invalid_activity_type',
+            productIds: ['product_1'],
+            priority: 1,
+            exclusive: false,
+            preheatEnabled: false,
+        );
 
         // 直接调用execute()方法
-        $result = $this->procedure->execute();
+        $result = $this->procedure->execute($param);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('success', $result);

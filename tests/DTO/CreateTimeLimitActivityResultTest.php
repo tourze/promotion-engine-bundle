@@ -12,7 +12,7 @@ use PromotionEngineBundle\DTO\CreateTimeLimitActivityResult;
  * @internal
  */
 #[CoversClass(CreateTimeLimitActivityResult::class)]
-class CreateTimeLimitActivityResultTest extends TestCase
+final class CreateTimeLimitActivityResultTest extends TestCase
 {
     public function testConstructor(): void
     {

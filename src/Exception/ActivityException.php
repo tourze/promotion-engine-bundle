@@ -2,7 +2,7 @@
 
 namespace PromotionEngineBundle\Exception;
 
-class ActivityException extends \Exception
+final class ActivityException extends \Exception
 {
     public static function activityConflict(string $message): self
     {

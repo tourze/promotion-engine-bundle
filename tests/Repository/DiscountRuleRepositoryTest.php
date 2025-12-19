@@ -14,7 +14,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractRepositoryTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(DiscountRuleRepository::class)]
-class DiscountRuleRepositoryTest extends AbstractRepositoryTestCase
+final class DiscountRuleRepositoryTest extends AbstractRepositoryTestCase
 {
     private DiscountRuleRepository $repository;
 

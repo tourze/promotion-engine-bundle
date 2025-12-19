@@ -17,7 +17,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(ProductActivityService::class)]
-class ProductActivityServiceTest extends AbstractIntegrationTestCase
+final class ProductActivityServiceTest extends AbstractIntegrationTestCase
 {
     private ProductActivityService $productActivityService;
 

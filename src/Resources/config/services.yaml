@@ -2,25 +2,16 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    public: false
 
-  # 自动配置所有服务，但排除 Bundle 类和 Entity 类
   PromotionEngineBundle\Command\:
     resource: '../../Command/'
-  
   PromotionEngineBundle\Controller\:
     resource: '../../Controller/'
-  
-  PromotionEngineBundle\Enum\:
-    resource: '../../Enum/'
-  
   PromotionEngineBundle\Repository\:
     resource: '../../Repository/'
-  
   PromotionEngineBundle\Service\:
     resource: '../../Service/'
-  
-  PromotionEngineBundle\DTO\:
-    resource: '../../DTO/'
-  
+    public: true
   PromotionEngineBundle\Procedure\:
     resource: '../../Procedure/'

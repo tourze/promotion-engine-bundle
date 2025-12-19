@@ -12,7 +12,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(ActivityCacheService::class)]
-class ActivityCacheServiceTest extends AbstractIntegrationTestCase
+final class ActivityCacheServiceTest extends AbstractIntegrationTestCase
 {
     private ActivityCacheService $service;
 

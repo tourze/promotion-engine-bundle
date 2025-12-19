@@ -35,7 +35,7 @@ final class UpdateTimeLimitActivityStatusCommandTest extends AbstractCommandTest
         self::assertInstanceOf(Command::class, $command);
 
         $application = new Application();
-        $application->add($command);
+        $application->addCommand($command);
 
         $command = $application->find('promotion:update-activity-status');
         $this->commandTester = new CommandTester($command);

@@ -18,7 +18,7 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
  */
 #[RunTestsInSeparateProcesses]
 #[CoversClass(DiscountCalculatorService::class)]
-class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
+final class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
 {
     private DiscountCalculatorService $service;
 
@@ -108,8 +108,8 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
     {
         $activity = $this->createTestActivity();
 
-        // 创建一个模拟的折扣规则
-        $discountRule = $this->createMockDiscountRule();
+        // 创建一个真实的折扣规则
+        $discountRule = $this->createRealDiscountRule();
 
         $maxDiscount = $this->service->estimateMaxDiscount($discountRule, 1000.0, 10);
 
@@ -119,7 +119,7 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
 
     public function testEstimateMaxDiscountWithZeroAmount(): void
     {
-        $discountRule = $this->createMockDiscountRule();
+        $discountRule = $this->createRealDiscountRule();
 
         $maxDiscount = $this->service->estimateMaxDiscount($discountRule, 0.0, 1);
 
@@ -128,7 +128,7 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
 
     public function testValidateRules(): void
     {
-        $rules = [$this->createMockDiscountRule()];
+        $rules = [$this->createRealDiscountRule()];
         $item = new CalculateActivityDiscountItem(
             productId: 'product_validate',
             skuId: 'sku_validate',
@@ -158,8 +158,8 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
     public function testValidateRulesWithMultipleRules(): void
     {
         $rules = [
-            $this->createMockDiscountRule(),
-            $this->createMockDiscountRule(),
+            $this->createRealDiscountRule(),
+            $this->createRealDiscountRule(),
         ];
 
         $item = new CalculateActivityDiscountItem(
@@ -177,8 +177,8 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
     public function testGetApplicableRules(): void
     {
         $rules = [
-            $this->createMockDiscountRule(),
-            $this->createMockDiscountRule(),
+            $this->createRealDiscountRule(),
+            $this->createRealDiscountRule(),
         ];
 
         $item = new CalculateActivityDiscountItem(
@@ -231,32 +231,14 @@ class DiscountCalculatorServiceTest extends AbstractIntegrationTestCase
         return $activityProduct;
     }
 
-    private function createMockDiscountRule(): DiscountRule
+    private function createRealDiscountRule(): DiscountRule
     {
-        $discountRule = $this->getMockBuilder(DiscountRule::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $discountRule->method('isAmountQualified')
-            ->willReturn(true)
-        ;
-
-        $discountRule->method('isQuantityQualified')
-            ->willReturn(true)
-        ;
-
-        $discountRule->method('getDiscount')
-            ->willReturn(10.0)
-        ;
-
-        $discountRule->method('getMaxDiscountAmountAsFloat')
-            ->willReturn(100.0)
-        ;
-
-        $discountRule->method('getDiscountType')
-            ->willReturn(DiscountType::DISCOUNT)
-        ;
+        $discountRule = new DiscountRule();
+        $discountRule->setMinAmount('0');
+        $discountRule->setRequiredQuantity(1);
+        $discountRule->setDiscountValue('10');
+        $discountRule->setMaxDiscountAmount('100');
+        $discountRule->setDiscountType(DiscountType::DISCOUNT);
 
         return $discountRule;
     }

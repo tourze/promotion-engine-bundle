@@ -9,14 +9,16 @@ use PromotionEngineBundle\DTO\ApplyActivityToProductsResult;
 use PromotionEngineBundle\Entity\ActivityProduct;
 use PromotionEngineBundle\Entity\TimeLimitActivity;
 use PromotionEngineBundle\Exception\ActivityException;
+use PromotionEngineBundle\Param\ApplyActivityToProductsParam;
 use PromotionEngineBundle\Repository\ActivityProductRepository;
 use PromotionEngineBundle\Repository\TimeLimitActivityRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
-use Tourze\JsonRPC\Core\Attribute\MethodParam;
 use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Contracts\RpcParamInterface;
+use Tourze\JsonRPC\Core\Result\ArrayResult;
 use Tourze\JsonRPCLockBundle\Procedure\LockableProcedure;
 use Tourze\JsonRPCLogBundle\Attribute\Log;
 
@@ -28,15 +30,6 @@ use Tourze\JsonRPCLogBundle\Attribute\Log;
 #[Log]
 class ApplyActivityToProducts extends LockableProcedure
 {
-    #[MethodParam(description: '活动ID')]
-    public string $activityId;
-
-    /**
-     * @var array<array<string, mixed>>
-     */
-    #[MethodParam(description: '商品信息列表')]
-    public array $products;
-
     public function __construct(
         private readonly TimeLimitActivityRepository $activityRepository,
         private readonly ActivityProductRepository $activityProductRepository,
@@ -45,12 +38,12 @@ class ApplyActivityToProducts extends LockableProcedure
     }
 
     /**
-     * @return array<string, mixed>
+     * @phpstan-param ApplyActivityToProductsParam $param
      */
-    public function execute(): array
+    public function execute(ApplyActivityToProductsParam|RpcParamInterface $param): ArrayResult
     {
         try {
-            $input = $this->buildInput();
+            $input = $this->buildInput($param);
             $this->validateInput($input);
 
             $this->entityManager->beginTransaction();
@@ -67,10 +60,10 @@ class ApplyActivityToProducts extends LockableProcedure
         }
     }
 
-    private function buildInput(): ApplyActivityToProductsInput
+    private function buildInput(ApplyActivityToProductsParam $param): ApplyActivityToProductsInput
     {
         $products = [];
-        foreach ($this->products as $productData) {
+        foreach ($param->products as $productData) {
             $productId = $productData['productId'] ?? '';
             $activityPrice = $productData['activityPrice'] ?? '0.00';
             $limitPerUser = $productData['limitPerUser'] ?? 1;
@@ -85,7 +78,7 @@ class ApplyActivityToProducts extends LockableProcedure
         }
 
         return new ApplyActivityToProductsInput(
-            activityId: $this->activityId,
+            activityId: $param->activityId,
             products: $products,
         );
     }
@@ -193,8 +186,4 @@ class ApplyActivityToProducts extends LockableProcedure
     /**
      * @return array<string, mixed>|null
      */
-    public static function getMockResult(): ?array
-    {
-        return ApplyActivityToProductsResult::success(3, 3)->toArray();
-    }
 }
